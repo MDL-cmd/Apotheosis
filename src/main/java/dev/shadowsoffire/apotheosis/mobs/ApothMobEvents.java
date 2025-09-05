@@ -185,7 +185,10 @@ public class ApothMobEvents {
             sLevel.players().forEach(p -> {
                 Vec3 tPos = new Vec3(invader.getX(), p.getY(), invader.getZ());
                 if (p.distanceToSqr(tPos) <= AdventureConfig.bossAnnounceRange * AdventureConfig.bossAnnounceRange) {
-                    ((ServerPlayer) p).connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("info.apotheosis.boss_spawn", name, (int) invader.getX(), (int) invader.getY())));
+                    Component message = AdventureConfig.bossAnnounceExact ?
+                            Component.translatable("info.apotheosis.boss_spawn_exact", name, (int) invader.getX(), (int) invader.getY(), (int) invader.getZ()) :
+                            Component.translatable("info.apotheosis.boss_spawn", name);
+                    ((ServerPlayer) p).connection.send(new ClientboundSetActionBarTextPacket(message));
                     PacketDistributor.sendToPlayer((ServerPlayer) p, new BossSpawnPayload(invader.blockPosition(), rarity));
                 }
             });
